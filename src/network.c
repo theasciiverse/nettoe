@@ -34,6 +34,8 @@
 #include <arpa/inet.h>
 #include <sys/wait.h>
 #include <netdb.h>
+#include <ifaddrs.h>
+#include <net/if.h>
 
 #include "network.h"
 
@@ -289,6 +291,50 @@ void give_local_IP(char *local_ip_address, int len)
 					NULL, 0, NI_NUMERICHOST);
 	}
 } /* give_local_IP(char *) */
+
+
+/* Prints the addresses other machines can reach this one at, one per
+ * line with the given indent: the network interfaces that are up, not
+ * the loopback, IPv4 first, then IPv6 without link-local ones. Returns
+ * how many it printed. */
+int print_local_addresses(const char *indent)
+{
+	struct ifaddrs *ifs, *ifa;
+	char addr[NI_MAXHOST];
+	int pass, count = 0;
+
+	if (getifaddrs(&ifs) != 0)
+		return 0;
+
+	for (pass = 0; pass < 2; pass++) {
+		int family = pass == 0 ? AF_INET : AF_INET6;
+
+		if (addrfamily != AF_UNSPEC && addrfamily != family)
+			continue;
+		for (ifa = ifs; ifa != NULL && count < 6; ifa = ifa->ifa_next) {
+			socklen_t len;
+
+			if (ifa->ifa_addr == NULL || ifa->ifa_addr->sa_family != family)
+				continue;
+			if (!(ifa->ifa_flags & IFF_UP) || (ifa->ifa_flags & IFF_LOOPBACK))
+				continue;
+			if (family == AF_INET6) {
+				struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) ifa->ifa_addr;
+				if (IN6_IS_ADDR_LINKLOCAL(&sin6->sin6_addr))
+					continue;
+				len = sizeof(struct sockaddr_in6);
+			} else
+				len = sizeof(struct sockaddr_in);
+			if (getnameinfo(ifa->ifa_addr, len, addr, sizeof(addr),
+					NULL, 0, NI_NUMERICHOST) == 0) {
+				printf("%s%s\n", indent, addr);
+				count++;
+			}
+		}
+	}
+	freeifaddrs(ifs);
+	return count;
+} /* print_local_addresses(const char *) */
 
 
 /* NOT USED */

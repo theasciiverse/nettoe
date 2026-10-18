@@ -28,6 +28,7 @@ extern int write_to_socket ( int connected_socket, char *buffer, int bytes );
 extern int read_from_socket ( int connected_socket, char *buffer, int bytes );
 
 extern void give_local_IP ( char * local_ip_address, int bytes );
+extern int print_local_addresses ( const char *indent );
 
 /* extern const char *give_local_hostname ( void ); */ /* NOT USED */
 

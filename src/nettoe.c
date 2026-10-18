@@ -954,8 +954,13 @@ static void server_start (void)
   give_local_IP (local_ip_address, sizeof(local_ip_address));
 
   printf ("\n   You should now tell your IP address to any interested\n");
-  printf ("   competitor. There might be more than one address, but\n");
-  printf ("   \"%s\" should do.\n", local_ip_address);
+  printf ("   competitor (netToe listens on TCP port %d). This\n",
+	  SERVER_PORT_NUMBER);
+  printf ("   machine can be reached at:\n\n");
+  /* The name lookup alone often gives 127.0.1.1, which no other
+   * machine can use. */
+  if (print_local_addresses ("     ") == 0)
+    printf ("     %s\n", local_ip_address);
   printf ("\n   Connected players:\n");
   printf ("   ------------------\n");
   printf ("   -");
