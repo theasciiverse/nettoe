@@ -183,7 +183,7 @@ void nettoe_term_reset_color ( void )
 
 void nettoe_term_set_color (int fg, int attrib)
 {
-   char cmd_str[13];
+   char cmd_str[32];
 
    if (NO_COLORS == 1 )
         return;

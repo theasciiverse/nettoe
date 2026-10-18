@@ -118,11 +118,13 @@ int main (int argc, char *argv[])
 
   parse_cmd_args(argc, argv);
 
-  /* Remove any elevated access. */
-  setegid(getgid());
-  setgid(getgid());
-  seteuid(getuid());
-  setuid(getuid());
+  /* Remove any elevated access, and do not go on if that fails. */
+  if (setegid(getgid()) != 0 || setgid(getgid()) != 0
+      || seteuid(getuid()) != 0 || setuid(getuid()) != 0)
+    {
+      perror("nettoe: dropping privileges");
+      exit(EXIT_FAILURE);
+    }
 
   srandom(time(0));
 
