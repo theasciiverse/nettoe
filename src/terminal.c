@@ -63,6 +63,7 @@ static char *smso_str = NULL;
 static char *sgr0_str = NULL;
 static char *setab_str = NULL;
 static char *setaf_str = NULL;
+static char *op_str = NULL;
 
 static int using_terminfo = 0;
 
@@ -100,6 +101,7 @@ void setup_terminfo (void)
 	sgr0_str = tigetstr("sgr0");
 	setab_str = tigetstr("setab");
 	setaf_str = tigetstr("setaf");
+	op_str = tigetstr("op");
      }
 # elif USE_TERMCAP
    if (using_terminfo)
@@ -112,6 +114,7 @@ void setup_terminfo (void)
 	sgr0_str  = tgetstr("me", &p);
 	setab_str = tgetstr("AB", &p);
 	setaf_str = tgetstr("AF", &p);
+	op_str = tgetstr("op", &p);
      }
 # endif /* USE_TERMCAP */
 }
@@ -139,6 +142,15 @@ void nettoe_term_set_default_color (void)
      return;
 
 #if USE_TERMINFO || USE_TERMCAP
+   /* Colour 9 is the default colour only in ECMA-48's own
+    * numbering, which 8-colour terminfo entries happen to use;
+    * in 16 and 256-colour ones setaf 9 and setab 9 are bright red.
+    * The terminal's own "original pair" string is the right one. */
+   if (op_str && op_str != (char *) -1)
+     {
+        putp(op_str);
+        return;
+     }
    if (setaf_str)
      {
         /* Based on ECMA-48. */
