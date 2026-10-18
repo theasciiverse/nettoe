@@ -277,6 +277,7 @@ static void main_menu (void)
     nettoe_term_set_color (COLOR_RED, ATTRIB_BRIGHT);
 
     fflush (stdin);
+    fflush (stdout);
     if (!fgets (answer, sizeof(answer), stdin))
       exit(EXIT_FAILURE);
 
@@ -422,6 +423,7 @@ static void cpu_AI_menu (void)
     nettoe_term_set_color (COLOR_RED, ATTRIB_BRIGHT);
 
     fflush (stdin);
+    fflush (stdout);
     if (!fgets (answer, sizeof(answer), stdin))
       exit(EXIT_FAILURE);
 
@@ -531,6 +533,7 @@ static void network_menu (void)
     nettoe_term_set_color (COLOR_RED, ATTRIB_BRIGHT);
 
     fflush (stdin);
+    fflush (stdout);
     if (!fgets (answer, sizeof(answer), stdin))
       exit(EXIT_FAILURE);
 
@@ -585,6 +588,7 @@ static void network_menu (void)
       printf("\n\n Your opponent has resigned the game by cutting connections !\n");
       printf (" (A carrage return continues.   )\b\b\b");
       fflush (stdin);
+      fflush (stdout);
       getchar();
       return;
     }
@@ -737,6 +741,7 @@ static void do_one_player_game (void)
   nettoe_term_set_default_color ();
   nettoe_term_reset_color();
   printf (WANT_TO_PLAY);
+  fflush (stdout);
   if (scanf ("%11s", y_n) != 1)
     y_n[0] = 'n', y_n[1] = '\0';
   getchar();
@@ -813,6 +818,7 @@ static void do_two_player_game (void)
     show_drawed_game ();
 
   printf (WANT_TO_PLAY);
+  fflush (stdout);
   if (scanf ("%11s", y_n) != 1)
     y_n[0] = 'n', y_n[1] = '\0';
   getchar();
@@ -913,6 +919,7 @@ static void get_player_move (const char *name, char pawn)
 
   while (1)
     {
+      fflush (stdout);
       if (scanf ("%3s", move) != 1)
 	move[0] = '\0';
 
@@ -982,6 +989,7 @@ static void server_start (void)
     {
       printf ("   (A carrage return continues.   )\b\b\b");
       fflush (stdin);
+      fflush (stdout);
       getchar();
       return;
     }
@@ -1056,6 +1064,7 @@ static void client_start (void)
   nettoe_term_reset_color();
   printf ("\n    Host to connect to (IP or hostname): ");
   nettoe_term_set_color (COLOR_BLUE, ATTRIB_BRIGHT);
+  fflush (stdout);
   if (scanf (" %46s", host_ip_number) != 1)
     host_ip_number[0] = '\0';
   nettoe_term_reset_color();
@@ -1067,6 +1076,7 @@ static void client_start (void)
     {
       printf ("   (A carrage return continues.   )\b\b\b");
       fflush (stdin);
+      fflush (stdout);
       getchar();
       return;
     }
@@ -1228,6 +1238,7 @@ static void init_server_network_game (void)
 
   nettoe_beep();
   printf (WANT_TO_PLAY);
+  fflush (stdout);
   if (scanf ("%11s", y_n) != 1)
     y_n[0] = 'n', y_n[1] = '\0';
   getchar();
@@ -1358,6 +1369,7 @@ static void init_client_network_game (void)
       printf ("\n %s wants to play again. What about you ?\n", player1_name);
       nettoe_beep();
       printf (WANT_TO_PLAY);
+      fflush (stdout);
       if (scanf ("%11s", y_n) != 1)
 	y_n[0] = 'n', y_n[1] = '\0';
       getchar();

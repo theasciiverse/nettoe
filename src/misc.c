@@ -69,6 +69,7 @@ void get_player_pname(char * str, size_t maxlen)
 	if ( maxlen <= 1 )
 		return;
 
+	fflush (stdout);
 	if (!fgets(buffer, sizeof(buffer), stdin))
 	  buffer[0] = '\0';
 
@@ -149,6 +150,7 @@ void print_infos_screen (void)
 	printf(" to go back to the main menu. ");
 	 
 	fflush (stdin);
+	fflush (stdout);
 	getchar ();
 
 	nettoe_term_set_default_color();

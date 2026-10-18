@@ -134,6 +134,7 @@ int establish_listening_socket(unsigned short port_number, char *peer_ip_address
 	}
 
 	sin_size = sizeof(their_addr);
+	fflush(stdout);
 
 	if ( (new_fd = accept(sockfd, (struct sockaddr *) &their_addr,
 							&sin_size)) == -1)
@@ -161,6 +162,7 @@ int connect_to_socket(char *host_ip_number, unsigned short port_number)
 	struct addrinfo hints, *ai, *aiptr;
 
 	//printf("\n   Calling %s.\n\n", host_ip_number);
+	fflush(stdout);
 
 	memset(&hints, 0, sizeof(hints));
 	hints.ai_family = addrfamily;
@@ -212,6 +214,7 @@ int read_from_socket(int connected_socket, char *buffer, int bytes)
 	int bytescount;
 	int bytesread;
 
+	fflush(stdout);	/* show what was printed before waiting */
 	bytescount = 0;
 	bytesread  = 0;
 
