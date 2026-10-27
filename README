@@ -1,3 +1,18 @@
+Play it with Asciiverse
+=======================
+
+With av, the Asciiverse client (https://asciiverse.sh):
+
+    av install nettoe
+    av play nettoe
+
+Or download the archive for your system from this repository's Releases,
+unpack it and run ./nettoe (nettoe.exe on Windows).
+
+The original README follows.
+
+------------------------------------------------------------------------
+
 -- $Id: README file for netToe version 1.5.1 - released 21 March 2014
 ------------------------------------------------------------------------
 

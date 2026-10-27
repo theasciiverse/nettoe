@@ -70,6 +70,9 @@ read/write on socket descriptors) and would need Winsock (WSAStartup,
 closesocket, recv/send) and a getifaddrs replacement
 (GetAdaptersAddresses); the screen code is plain escape codes, which the
 Windows 10 console understands.
+- **How to play it, at the top of README.** A short note on installing and
+  starting it with av, or from a release archive; the original text follows
+  unchanged.
 
 ## Packaging (new files)
 
