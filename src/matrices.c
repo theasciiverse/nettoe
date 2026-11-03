@@ -21,6 +21,7 @@
 #include <stdio.h>
 
 #include "matrices.h"
+#include "centre.h"	/* Asciiverse: centred output */
 
 
 /* functions set not used yet in nettoe */

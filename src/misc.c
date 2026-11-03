@@ -43,6 +43,7 @@
 #include "game.h"
 #include "misc.h"
 #include "terminal.h"
+#include "centre.h"	/* Asciiverse: centred output */
 
 int who_start_first(void)
 {

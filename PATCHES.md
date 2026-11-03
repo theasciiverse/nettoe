@@ -56,6 +56,14 @@ defines them.
   flushes stdout when a program reads stdin, musl (the static Linux build)
   does not, so the move prompt never appeared. stdout is flushed before
   each keyboard read and before waiting on the network.
+- **Centred in the terminal.** Every screen was drawn against the left
+  edge, 61 columns wide. `src/centre.h`, included after each file's other
+  headers, sends printf, puts and putchar through `centre_*` functions in
+  terminal.c, which put a left margin of half the spare width before
+  every line; the margin is measured again at every screen clear, so a
+  resized terminal gets it from the next screen on. Reads mark a new line
+  (the terminal echoes the Enter). Output that is not a terminal gets no
+  margin.
 - **Warnings.** A failed privilege drop (setuid and friends, whose results
   were ignored) now stops the game; the colour escape buffer is big enough
   for any value.

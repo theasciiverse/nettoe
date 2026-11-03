@@ -54,6 +54,8 @@
 #include "terminal.h"
 #include "game.h"
 
+void centre_home (void);
+
 #if defined USE_TERMINFO || defined USE_TERMCAP
 static char *clear_str = NULL;
 static char *bell_str = NULL;
@@ -132,6 +134,7 @@ void nettoe_term_clear (void)
      if (system("clear 2>/dev/null"))
        fprintf(stderr, "Terminal access failed.\n");
    }
+   centre_home();
 }
 
 
@@ -241,3 +244,101 @@ void nettoe_beep (void)
 #endif /* USE_TERMINFO || USE_TERMCAP */
      printf("\a");
 } /* beep(void) */
+
+/* Asciiverse: centring (centre.h). netToe's screens are 61 columns wide;
+ * every line gets a left margin of half the spare width. */
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/ioctl.h>
+
+#define CENTRE_WIDTH 61
+
+static int centre_margin = -1;
+static int centre_line_start = 1;
+
+static void centre_measure (void)
+{
+   struct winsize ws;
+
+   centre_margin = 0;
+   if (isatty(STDOUT_FILENO) && ioctl(STDOUT_FILENO, TIOCGWINSZ, &ws) == 0
+       && ws.ws_col > CENTRE_WIDTH)
+     centre_margin = (ws.ws_col - CENTRE_WIDTH) / 2;
+}
+
+static void centre_write (const char *s, size_t n)
+{
+   size_t i = 0;
+
+   if (centre_margin < 0)
+     centre_measure();
+   while (i < n) {
+      const char *nl;
+      size_t end;
+      int k;
+
+      if (centre_line_start && s[i] != '\n') {
+	 for (k = 0; k < centre_margin; k++)
+	   fputc(' ', stdout);
+	 centre_line_start = 0;
+      }
+      nl = memchr(s + i, '\n', n - i);
+      end = nl ? (size_t) (nl - s) + 1 : n;
+      fwrite(s + i, 1, end - i, stdout);
+      if (nl)
+	centre_line_start = 1;
+      i = end;
+   }
+}
+
+int centre_printf (const char *fmt, ...)
+{
+   char buf[4096];
+   va_list ap;
+   int len;
+
+   va_start(ap, fmt);
+   len = vsnprintf(buf, sizeof(buf), fmt, ap);
+   va_end(ap);
+   if (len < 0)
+     return len;
+   centre_write(buf, (size_t) len < sizeof(buf) ? (size_t) len : sizeof(buf) - 1);
+   return len;
+}
+
+int centre_puts (const char *s)
+{
+   centre_write(s, strlen(s));
+   centre_write("\n", 1);
+   return 1;
+}
+
+int centre_putchar (int c)
+{
+   char ch = (char) c;
+
+   centre_write(&ch, 1);
+   return (unsigned char) c;
+}
+
+/* after a screen clear: the cursor is home, and the terminal may have a
+ * new width */
+void centre_home (void)
+{
+   centre_measure();
+   centre_line_start = 1;
+}
+
+/* after reading a line: the terminal echoed the Enter */
+int centre_read_int (int r)
+{
+   centre_line_start = 1;
+   return r;
+}
+
+char *centre_read_str (char *r)
+{
+   centre_line_start = 1;
+   return r;
+}

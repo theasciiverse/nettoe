@@ -47,6 +47,7 @@
 #define GAME_PRIVATE_PROTOTYPES
 #include "game.h"
 #include "board.h"
+#include "centre.h"	/* Asciiverse: centred output */
 
 /* Has network partner reported EOF? */
 int has_given_eof = 0;

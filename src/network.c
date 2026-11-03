@@ -38,6 +38,7 @@
 #include <net/if.h>
 
 #include "network.h"
+#include "centre.h"	/* Asciiverse: centred output */
 
 /* Has network partner reported EOF? */
 extern int has_given_eof;
