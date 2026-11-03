@@ -141,10 +141,13 @@ WINS = [(0, 1, 2), (3, 4, 5), (6, 7, 8), (0, 3, 6), (1, 4, 7), (2, 5, 8), (0, 4,
 def board(rec):
     """The nine cells, a1 to c3, read from the "Current game" grid."""
     cells = []
+    # the game centres its screens (src/centre.h): the board starts where
+    # the banner's left corner does
+    m = next((l.index("+-") for l in rec.screen.display if "+-" in l), 0)
     for line in rec.screen.display:
         for row in "abc":
             if f"{row}1 | {row}2 | {row}3" in line:
-                left = line[:27].split("|")
+                left = line[m:m + 27].split("|")
                 cells += [c.strip() or " " for c in left[:3]]
     return cells if len(cells) == 9 else None
 
